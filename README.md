@@ -10,8 +10,8 @@
 
 1. Клонируем проект
     ```bash
-   git clone https://github.com/ArtemIsmagilov/muller-wordbook.git
-   cd /muller-wordbook
+   git clone https://github.com/ArtemIsmagilov/mysite.git
+   cd /mysite
     ```
 2. Создаем виртуальное окружение и устанавливаем необходимые пакеты
     ```bash
