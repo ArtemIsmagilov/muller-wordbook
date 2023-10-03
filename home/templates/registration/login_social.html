@@ -1,0 +1,26 @@
+{% extends "menu.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<h1>Аутентификация</h1>
+<nav class="social_auth" style="text-align: center;">
+	<a href="{% url 'social:begin' 'google-oauth2' %}">
+		<img style="width: 50px;" src="{% static 'home/imgs/google.png' %}">
+	</a>
+	<a href="{% url 'social:begin' 'github' %}">
+		<img style="width: 50px;" src="{% static 'home/imgs/github.jpg' %}">
+	</a>
+  <div style="width: 100%; height: 15px; border-bottom: 1px solid lightgray; text-align: center"></div>
+</nav>
+
+    {% if form.errors %}
+        <p>Ваш логин и пароль не совпадают с действительными. Попробуйте еще раз или сбростье пароль</p>
+    {% endif %}
+        <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-primary" value="Войти" />
+            <input type="hidden" name="next" value="{{ next }}" />
+
+{% endblock %}

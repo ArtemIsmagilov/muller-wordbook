@@ -1,0 +1,48 @@
+{% extends "menu.html" %}
+{% block content %}
+<script>
+    function favPost(url, word_id) {
+    console.log('Requesting JSON');
+    $.post(url, {},  function(rowz){
+        console.log(url, 'finished');
+        $("#unfavorite_star_"+word_id).toggle();
+        $("#favorite_star_"+word_id).toggle();
+    }).fail(function(xhr) {
+        alert('Url failed with '+xhr.status+' '+url);
+    });
+}
+</script>
+<h1>Личный словарь</h1>
+{% if word_list %}
+    <ul>
+    {% for word in word_list %}
+        <li>
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'words:word_detail' word.id %}"><strong>{{ word.eng }}</strong>
+                    <a href="#" onclick=
+                     "favPost('{% url 'words:word_favorite' word.id %}', {{ word.id }} );return false;"
+                    {% if word.id in favorites %} style="display: none;" {% endif %} id="unfavorite_star_{{ word.id }}">
+                <span class="fa-stack" style="vertical-align: middle;">
+                <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+                <i class="fa fa-star-o fa-stack-1x"></i>
+                </span>
+                </a>
+
+                <a href="#" onclick="favPost('{% url 'words:word_unfavorite' word.id %}', {{ word.id }} );return false;"
+                    {% if word.id not in favorites %} style="display: none;" {% endif %} id="favorite_star_{{ word.id }}">
+                <span class="fa-stack" style="vertical-align: middle;">
+                <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+                <i class="fa fa-star-o fa-stack-1x"></i>
+                </span>
+                </a>
+
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Your dictionary is empty</p>
+{% endif %}
+
+{% endblock %}

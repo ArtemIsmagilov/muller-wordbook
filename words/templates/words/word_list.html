@@ -1,0 +1,112 @@
+{% extends "menu.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'words/css/style.css' %}">
+
+<script>
+function favPost(url, word_id) {
+console.log('Requesting JSON');
+$.post(url, {},  function(rowz){
+    console.log(url, 'finished');
+    $("#unfavorite_star_"+word_id).toggle();
+    $("#favorite_star_"+word_id).toggle();
+}).fail(function(xhr) {
+    alert('Url failed with '+xhr.status+' '+url);
+});
+}
+</script>
+
+<div>
+<form action="" method="post" style="float:right;">
+    {% csrf_token %}
+    {{ form }}
+  <button type="submit"><i class="fa fa-search"></i></button>
+<a href="{% url 'words:all' %}"><i class="fa fa-undo"></i></a>
+</div>
+
+{% if word_list %}
+    <div>
+    {% for word in word_list %}
+        <a href="{% url 'words:word_detail' word.id %}">
+
+                <div id="my_div" class="row"><strong>{{ word.eng }}</strong>
+            {% if user.is_authenticated %}
+                <a href="#" onclick="favPost('{% url 'words:word_unfavorite' word.id %}', {{ word.id }} );return false;"
+                    {% if word.id not in favorites %} style="display: none;" {% endif %} id="favorite_star_{{ word.id }}">
+                <span class="fa-stack" style="vertical-align: middle;">
+                <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+                <i class="fa fa-star-o fa-stack-1x"></i>
+                </span>
+                </a>
+                <a href="#" onclick=
+                     "favPost('{% url 'words:word_favorite' word.id %}', {{ word.id }} );return false;"
+                    {% if word.id in favorites %} style="display: none;" {% endif %} id="unfavorite_star_{{ word.id }}">
+                <span class="fa-stack" style="vertical-align: middle;">
+                <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+                <i class="fa fa-star-o fa-stack-1x"></i>
+                </span>
+                </a>
+            {% endif %}
+        </div></a>
+
+    {% endfor %}
+</div>
+{% else %}
+    <p>No words are available.</p>
+
+
+    {% for word in page_obj %}
+<div>
+    <a href="{% url 'words:word_detail' word.id %}">
+
+        <div id="my_div" class="row"><strong>{{ word.eng }}</strong>
+    {% if user.is_authenticated %}
+        <a href="#" onclick="favPost('{% url 'words:word_unfavorite' word.id %}', {{ word.id }} );return false;"
+            {% if word.id not in favorites %} style="display: none;" {% endif %} id="favorite_star_{{ word.id }}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+        <a href="#" onclick=
+             "favPost('{% url 'words:word_favorite' word.id %}', {{ word.id }} );return false;"
+            {% if word.id in favorites %} style="display: none;" {% endif %} id="unfavorite_star_{{ word.id }}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+
+            {% endif %}
+        </div></a>
+</div>
+
+    {% endfor %}
+
+
+            <div class="pagination" style="font-size: 30px;">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    {% if page_obj.number %}
+
+                        <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+{% endif %}
+
+{% endblock %}

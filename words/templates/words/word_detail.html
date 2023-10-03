@@ -1,0 +1,54 @@
+{% extends "menu.html" %}
+{% block content %}
+{% load static %}
+<div class="head">
+<h1>{{ word.eng }}</h1>
+{% if sound %}
+<img onclick="play('{{ sound_file }}')" src="{%  static 'words/imgs/sound.png' %}" style="width: 30px;">
+{% endif %}
+{% if word.tr %}
+<i>брит. </i><strong><i>{{ word.tr }}</i></strong>
+{% endif %}
+</div>
+
+<img class='word' src="{{ word_img }}">
+
+{% if word.rus %}
+    <p>{{ word.rus|linebreaks }}</p>
+{% endif %}
+<hr/>
+<ol>
+    {% for i in phrases %}
+    <li><strong>{{ i.0 }}</strong> - {{ i.1 }}</li>
+{% endfor %}
+
+</ol>
+
+
+{% for fs in forms_words %}
+    {% if fs %}
+        {% for f in fs %}
+            {% if f and fs.0 == f %}
+                <div class="column first_col">{{ f }}</div>
+            {% elif f %}
+                <div class="column">{{ f }}</div>
+            {% endif %}
+        {% endfor %}
+    <br>
+    {% endif %}
+{% endfor %}
+<script type="text/javascript">
+function play(byte) {
+    console.log(byte);
+    var audio = new Audio("data:audio/wav;base64,"+byte);
+    audio.play();
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+

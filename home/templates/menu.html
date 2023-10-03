@@ -1,0 +1,45 @@
+{% extends "bootstrap.html" %}
+{% load app_tags %}
+{% block navbar %}
+<nav class="navbar navbar-default navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/">Словарь Мюллера</a>
+    </div>
+    <!-- https://stackoverflow.com/questions/22047251/django-dynamically-get-view-url-and-check-if-its-the-current-page -->
+    <ul class="nav navbar-nav">
+      {% url 'words' as words %}
+      <li {% if request.get_full_path == words %}class="active"{% endif %}>
+
+          <a href="{% url 'words:all' %}">Поиск слов в словаре</a></li>
+             <li {% if request.get_full_path == words %}class="active"{% endif %}>
+          <a href="{% url 'words:word_fav' %}">Ваши любимые слова</a></li>
+             <li {% if request.get_full_path == words %}class="active"{% endif %}>
+          <a href="{% url 'words:word_translate' %}">Переводчик, который поддерживает 109 языков</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'home:logout' %}">Выйти</a></li>
+                </ul>
+            </li>
+        {% else %}
+            <li>
+            <a href="{% url 'home:login' %}">Войти</a>
+            </li>
+            <li>
+            <a href="{% url 'home:register' %}">Регистрация</a>
+            </li>
+        {% endif %}
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+{% block content %}
+User: {{ request.user }}
+
+{% endblock %}

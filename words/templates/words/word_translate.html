@@ -1,0 +1,61 @@
+{% extends "menu.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<h1>Translator</h1>
+<p>
+  <form method="post" id="upload_form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.from_lang|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.to_lang|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.from_translate|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.to_translate|as_crispy_field }}
+      </div>
+  </div>
+  <div>
+    <input type="submit" value="Translate" class="btn btn-primary">
+    <input type="submit" value="Cancel" class="btn btn-danger" onclick="window.location.href='{% url 'words:all' %}';return false;">
+  </div>
+
+  </form>
+</p>
+{% for t in tt %}
+  <p><strong>t</strong></p>
+{% endfor %}
+
+<h2>{{ tt }}</h2>
+<h1><i>{{ to_tr }}</i>{{ from_tr }}</h1>
+<div>
+{% for w in tt %}
+  <b>{{ w }}, </b>
+  {% endfor %}
+</div>
+<i>{{ en_tr }}</i>
+<i>{{ ru_tr }}</i>
+<div>
+{% for w in v %}
+  <p>{{ w }}, </p>
+    {% endfor %}
+</div>
+<div>
+{% for w in a %}
+  <p>{{ w }}, </p>
+    {% endfor %}
+</div>
+<div>
+{% for w in n %}
+  <p>{{ w }}, </p>
+    {% endfor %}
+</div>
+{% endblock %}
