@@ -42,7 +42,8 @@ def inserting(con):
     q = queue.Queue()
     threading.Thread(target=worker, daemon=True).start()
 
-    [q.put(element) for element in root.findall('ar')]
+    for element in root.findall('ar'):
+        q.put(element)
 
     q.join()
     con.commit()
